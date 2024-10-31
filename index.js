@@ -28,6 +28,12 @@ app.get('/api/votes', (request, response) => {
     response.json(votes)
 })
 
+app.post('/api/votes', (request, response) => {
+    const vote = request.body
+    console.log(vote)
+    response.json(vote);
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
