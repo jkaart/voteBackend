@@ -3,6 +3,20 @@ const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 
 let users = [
+    {
+        username: 'admin',
+        passwordHash: '$2b$10$ASPoIxFCELt60boUlk7mWujElkF/UbQkYM7bBCtLYQO3CyjeNrN8y',
+        name: 'Admin Admin',
+        role: 'admin',
+        id: '1'
+    },
+    {
+        username: 'testi',
+        passwordHash: '$2b$10$ewgVSsM/.C3Yi2/qz9zlYeYA/FHeWaEptQbLGYAjIe/kNVfhtDOge',
+        name: 'Testi Testaaja',
+        role: 'user',
+        id: '2'
+    }
 ]
 
 const generateId = () => {
@@ -38,6 +52,7 @@ usersRouter.post('/', async (request, response) => {
 
 usersRouter.post('/login', async (request, response) => {
     const { username, password } = request.body;
+    console.log(password)
     const user = users.find(user => user.username === username)
 
 
@@ -57,7 +72,11 @@ usersRouter.post('/login', async (request, response) => {
         id: user.id,
     }
 
-    const token = jwt.sign(userForToken, process.env.SECRET)
+    const token = jwt.sign(
+        userForToken,
+        process.env.SECRET,
+        { expiresIn: 60 * 60 }
+    )
 
     response
         .status(200)

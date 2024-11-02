@@ -1,4 +1,7 @@
+const { request, response } = require('express')
+const jwt = require('jsonwebtoken')
 const votesRouter = require('express').Router()
+
 
 const generateId = () => {
     const maxId = votes.length > 0
@@ -23,12 +26,24 @@ let votes = [
 
 ]
 
+const getTokenFrom = request => { 
+    const authorization = request.get('Authorization') 
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '')
+    }
+    return null
+}
+
 votesRouter.get('/', async (request, response) => {
     response.json(votes)
 })
 
 votesRouter.post('/', async (request, response) => {
     const body = request.body
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
 
     if (!body.title) {
         return response.status(400).json({
@@ -55,8 +70,9 @@ votesRouter.post('/', async (request, response) => {
         options: options,
         id: generateId(),
     }
-    console.log(vote)
+    console.log('Vote: ',vote)
     votes = votes.concat(vote)
+    console.log('Votes',votes)
     return response.status(201).json({
         message: 'Vote registered successfully'
     })
