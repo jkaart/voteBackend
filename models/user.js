@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema({
     },
     name: String,
     passwordHash: String,
+    role: String,
     votedVotes: [
         {
             type: mongoose.Schema.Types.ObjectId,

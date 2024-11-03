@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 let users = require('../data/users')
+const User = require('../models/user')
 
 const generateId = () => {
     const maxId = users.length > 0
@@ -14,29 +15,24 @@ usersRouter.post('/', async (request, response) => {
     const { username, name, password, role } = request.body
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
-    const userFound = users.some(user => user.username === username)
-    if (userFound) return response.status(409).json({
-        message: 'Account already exists'
-    })
-    const user = {
-        username: username,
-        passwordHash: passwordHash,
-        name: name,
-        role: role,
-        id: generateId()
-    }
 
-    users = users.concat(user)
+    const user = new User({
+        username,
+        name,
+        passwordHash,
+        role
+    })
+
+    const savedUser = await user.save()
 
     response
         .status(201)
-        .json({ message: 'User registered successfully' })
+        .json({ savedUser, message: 'User registered successfully' })
 })
 
 usersRouter.post('/login', async (request, response) => {
     const { username, password } = request.body
-    const user = users.find(user => user.username === username)
-
+    const user = User.findOne({ username })
 
     const passwordCorrect = user === undefined
         ? false
@@ -57,7 +53,7 @@ usersRouter.post('/login', async (request, response) => {
     const token = jwt.sign(
         userForToken,
         process.env.SECRET,
-        { expiresIn: 60 * 1 }
+        { expiresIn: 60 * 60 }
     )
 
     response
