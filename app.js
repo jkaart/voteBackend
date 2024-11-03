@@ -1,12 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
+require('express-async-errors')
 const cors = require('cors')
 
-const config = require('./utils/config')
-
-
 const middleware = require('./utils/middleware')
-const logger = require('./utils/logger')
+
+const passport = require('passport')
+const { jwtStrategy } = require('./utils/passport')
 
 const votesRouter = require('./controllers/votes')
 const usersRouter = require('./controllers/users')
@@ -14,7 +15,7 @@ const usersRouter = require('./controllers/users')
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
-app.use(middleware.tokenExtractor)
+passport.use('jwt', jwtStrategy)
 
 app.use('/api/votes', votesRouter)
 app.use('/api/users', usersRouter)
