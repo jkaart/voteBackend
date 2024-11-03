@@ -20,7 +20,7 @@ export default [
     rules: {
       '@stylistic/js/indent': [
         'error',
-        2
+        4
       ],
       '@stylistic/js/linebreak-style': [
         'error',
@@ -34,6 +34,18 @@ export default [
         'error',
         'never'
       ],
+      'eqeqeq': 'error',
+      'no-trailing-spaces': 'error',
+      'object-curly-spacing': [
+        'error', 'always'
+      ],
+      'arrow-spacing': [
+        'error', { 'before': true, 'after': true },
+      ],
+      'no-console': 'off',
     },
+  },
+  { 
+    ignores: ["dist/**", "build/**"],
   },
 ]
