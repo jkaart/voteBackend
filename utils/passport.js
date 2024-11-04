@@ -1,5 +1,5 @@
 const { Strategy, ExtractJwt } = require('passport-jwt')
-const users = require('../data/users')
+const User = require('../models/user')
 
 const jwtOptions = {
     secretOrKey: process.env.SECRET,
@@ -8,7 +8,7 @@ const jwtOptions = {
 
 const jwtVerify = async (payload, done) => {
     console.log('Payload', payload)
-    const user = users.find(user => user.username === payload.username)
+    const user = User.findOne(payload.username)
     if (!user) {
         return done(null, false)
     }

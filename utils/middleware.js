@@ -20,7 +20,7 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
-    } else if (error.name === 'JsonWebTokenError') {
+    } else if (error.name === 'JsonWebTokenError' || error.name === 'jwt') {
         return response.status(400).json({ error: 'token missing or invalid' })
     }
 
@@ -33,8 +33,10 @@ const auth = (request, response, next) => {
             return next(error)
         }
         if (!user) {
-            console.log(error)
-            return response.status(403).json({ message: `Unauthorized: ${info.message}` })
+            return response.status(403).json({ error: `Unauthorized: ${info.message}` })
+        }
+        if (!user.role !== request.role) {
+            return response.status(404).json({ error: 'User not found' })
         }
         request.user = user
         next()

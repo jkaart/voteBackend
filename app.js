@@ -9,10 +9,12 @@ const { jwtStrategy } = require('./utils/passport')
 
 const votesRouter = require('./controllers/votes')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+
 
 mongoose.set('strictQuery', false)
 
@@ -33,6 +35,7 @@ passport.use('jwt', jwtStrategy)
 
 app.use('/api/votes', votesRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
