@@ -22,21 +22,19 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: error.message })
     } else if (error.name === 'JsonWebTokenError' || error.name === 'jwt') {
         return response.status(400).json({ error: 'token missing or invalid' })
+    } else if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
+        return response.status(400).json({ error: 'expected `username` to be unique' })
     }
-
     next(error)
 }
 
 const auth = (request, response, next) => {
-    passport.authenticate('jwt', (error, user, info) => {
+    passport.authenticate('jwt', { session: false }, (error, user, info) => {
         if (error) {
             return next(error)
         }
         if (!user) {
-            return response.status(403).json({ error: `Unauthorized: ${info.message}` })
-        }
-        if (!user.role !== request.role) {
-            return response.status(404).json({ error: 'User not found' })
+            return response.status(401).json({ error: `Unauthorized: ${info.message}` })
         }
         request.user = user
         next()
@@ -48,6 +46,7 @@ const checkUserRole = (requiredRoles) => (request, response, next) => {
         return next()
     }
     return response.status(403).json({ message: 'Access denied. No permissions.' })
+
 }
 
 module.exports = {
