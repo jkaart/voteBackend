@@ -7,7 +7,9 @@ const cors = require('cors')
 const passport = require('passport')
 const { jwtStrategy } = require('./utils/passport')
 
+const votingRouter = require('./controllers/voting')
 const votesRouter = require('./controllers/votes')
+const voteRouter = require('./controllers/vote')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 
@@ -33,7 +35,9 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 passport.use('jwt', jwtStrategy)
 
+app.use('/api/voting', votingRouter)
 app.use('/api/votes', votesRouter)
+app.use('/api/vote', voteRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 

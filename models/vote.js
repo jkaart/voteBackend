@@ -7,7 +7,8 @@ const voteOptionSchema = mongoose.Schema({
     },
     voteCount: {
         type: Number,
-        require: true
+        require: true,
+        default : 0,
     }
 })
 
@@ -19,15 +20,31 @@ const voteSchema = mongoose.Schema({
     description: String,
     options: [voteOptionSchema],
     child: voteOptionSchema,
-
-    votedUsers: [],
+    voteCreator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    votedUsers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 })
 
 voteSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
+        delete returnedObject._v
+        delete returnedObject.__v
+    }
+})
+
+voteOptionSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
+        delete returnedObject._v
+        delete returnedObject.__v
     }
 })
 

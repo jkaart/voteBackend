@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
-const { error } = require('../utils/logger')
+const { checkUserRole, auth } = require('../utils/middleware')
 
+// Create new user
 usersRouter.post('/', async (request, response) => {
     const { username, name, password, role } = request.body
     if (!(username || name || password || role)
@@ -26,6 +27,15 @@ usersRouter.post('/', async (request, response) => {
     response
         .status(201)
         .json({ savedUser, message: 'User registered successfully' })
+})
+
+// Get all users
+usersRouter.get('/', auth, checkUserRole(['admin']), async (request, response) => {
+    const users = await User.find({}).populate('createdVotes').populate('votedVotes')
+    if (users.length > 0) {
+        return response.json(users)
+    }
+    response.status(404).json(users)
 })
 
 module.exports = usersRouter

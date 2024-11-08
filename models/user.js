@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const VoteOption = require('./vote')
 
 const userVotesSchema = mongoose.Schema({
     voteId: {
@@ -8,7 +7,7 @@ const userVotesSchema = mongoose.Schema({
     },
     voteOptionId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: VoteOption
+        ref: 'VoteOption'
     }
 })
 
@@ -21,14 +20,22 @@ const userSchema = mongoose.Schema({
     name: String,
     passwordHash: String,
     role: String,
-    votedVotes: [],
+    votedVotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vote'
+    }],
+    createdVotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vote'
+    }]
 })
 
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
-        delete returnedObject._id
+        delete returnedObject._v
+        delete returnedObject.__v
         delete returnedObject.passwordHash
     }
 })
@@ -37,7 +44,8 @@ userVotesSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
-        delete returnedObject._id
+        delete returnedObject._v
+        delete returnedObject.__v
     }
 })
 
