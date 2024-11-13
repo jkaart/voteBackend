@@ -2,7 +2,7 @@ import { checkUserRoleFromLocalStorage, readTokenFromLocalStorage } from "./read
 import { errorHandler } from "./errorHandler.js";
 import { Info } from "../classes/Info.js";
 
-const backEndUrl = 'http://localhost:3001/api';
+const backEndUrl = '/api';
 
 const fetchRequest = async (request) => {
     try {
