@@ -38,4 +38,14 @@ usersRouter.get('/', auth, checkUserRole(['admin']), async (request, response) =
     response.status(404).json(users)
 })
 
+// Delete user itself
+usersRouter.delete('/', auth, async (request, response) => {
+    const id = request.user.id
+    const result = await User.findByIdAndDelete(id)
+    if (!result) {
+        return response.status(404).end()
+    }
+    response.status(204).end()
+})
+
 module.exports = usersRouter

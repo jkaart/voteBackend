@@ -8,7 +8,7 @@ const jwtOptions = {
 }
 
 const jwtVerify = async (payload, done) => {
-    User.findOne({ username: payload.username })
+    User.findById(payload.id)
         .then((user) => {
             if (!user) {
                 return done(null, false)

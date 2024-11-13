@@ -5,8 +5,7 @@ const Vote = require('../models/vote')
 // Get a single vote
 voteRouter.get('/:id', auth, checkUserRole(['user', 'admin']), async (request, response) => {
     const id = request.params.id
-    const vote = await Vote.findOne({ '_id': id }).populate('voteCreator').populate('votedUsers')
-    console.log(vote)
+    const vote = await Vote.findOne({ '_id': id }).populate({ path: 'voteCreator', select: 'username' }).populate({ path: 'votedUsers', select: 'username' })
     if (!vote) {
         return response.status(404).json({ error: 'Vote not found' })
     }

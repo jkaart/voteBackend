@@ -18,8 +18,14 @@ const userSchema = mongoose.Schema({
         unique: true
     },
     name: String,
-    passwordHash: String,
-    role: String,
+    passwordHash: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin']
+    },
     votedVotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vote'

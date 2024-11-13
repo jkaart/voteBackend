@@ -34,7 +34,7 @@ const auth = (request, response, next) => {
             return next(error)
         }
         if (!user) {
-            return response.status(401).json({ error: `Unauthorized: ${info.message}` })
+            return response.status(401).json({ error: 'Unauthorized' })
         }
         request.user = user
         next()

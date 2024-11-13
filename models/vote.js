@@ -8,7 +8,7 @@ const voteOptionSchema = mongoose.Schema({
     voteCount: {
         type: Number,
         require: true,
-        default : 0,
+        default: 0,
     }
 })
 
@@ -28,6 +28,7 @@ const voteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    voteCreated: { type: Date, default: Date.now }
 })
 
 voteSchema.set('toJSON', {
