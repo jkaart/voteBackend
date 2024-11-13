@@ -4,14 +4,9 @@ import { generateProgressBars } from "../functions/generators.js";
 import { voteContainer } from "../htmlElements/htmlElements.js";
 
 const generateCardContainer = (voteData) => {
-    const [day, month, year, hours, minutes, seconds] = [
-        voteData.voteCreateDate.getDate(),
-        voteData.voteCreateDate.getMonth(),
-        voteData.voteCreateDate.getFullYear(),
-        voteData.voteCreateDate.getHours(),
-        voteData.voteCreateDate.getMinutes(),
-        voteData.voteCreateDate.getSeconds()
-    ];
+    const formatter = new Intl.DateTimeFormat('fi-FI', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const voteCreateDate = formatter.format(voteData.voteCreateDate);
     const progressBars = generateProgressBars(voteData.options, voteData.id);
     const cardContainer = document.createElement('div');
     cardContainer.classList.add('col');
@@ -31,7 +26,7 @@ const generateCardContainer = (voteData) => {
                 </div>
             </div>
             <div class='card-footer'>
-            <p class='fw-bold'>Created: ${day}.${month}.${year} ${hours}:${minutes}:${seconds}</p>
+            <p class='fw-bold'>Created: ${voteCreateDate}</p>
             </div>
         </div>`;
     return cardContainer;
