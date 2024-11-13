@@ -1,5 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
+const path = require('path')
 const app = express()
 require('express-async-errors')
 const cors = require('cors')
@@ -34,6 +35,8 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 passport.use('jwt', jwtStrategy)
+
+app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.use('/api/voting', votingRouter)
 app.use('/api/votes', votesRouter)
